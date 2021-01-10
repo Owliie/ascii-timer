@@ -29,54 +29,56 @@ int *convertToMinutes(int seconds)
 	return time;
 }
 
-void print_number_line(int number)
+string get_number_line(int number)
 {
+	string temp = "";
 	for (int i = 0; i < TIMER_DIGIT_WIDTH; i++)
 	{
-		cout << number;
+		temp += to_string(number);
 	}
+
+	return temp;
 }
 
-void print_number_box(int number)
+string get_number_box(int number)
 {
-	// cout << number << setfill(' ') << setw(TIMER_DIGIT_WIDTH-1) << number;
-	cout << number;
+	string temp = to_string(number);
 
-	for (int i = 0; i < TIMER_DIGIT_WIDTH-2; i++)
+	for (int i = 0; i < TIMER_DIGIT_WIDTH - 2; i++)
 	{
-		cout << " ";
+		temp += " ";
 	}
-	
 
-	cout << number;
+	temp += to_string(number);
+	return temp;
 }
 
-void print_number_right(int number)
+string get_number_right(int number)
 {
-	// cout << setfill(' ') << setw(TIMER_DIGIT_WIDTH) << number;
-	for (int i = 0; i < TIMER_DIGIT_WIDTH-1; i++)
+	string temp = "";
+	for (int i = 0; i < TIMER_DIGIT_WIDTH - 1; i++)
 	{
-		cout << " ";
+		temp += " ";
 	}
-	cout << number;
+	temp += to_string(number);
+	return temp;
 }
 
-void print_number_left(int number)
+string get_number_left(int number)
 {
-	// cout << number << setfill(' ') << setw(TIMER_DIGIT_WIDTH);
-	cout << number;
-	for (int i = 0; i < TIMER_DIGIT_WIDTH-1; i++)
+	string temp = to_string(number);
+	for (int i = 0; i < TIMER_DIGIT_WIDTH - 1; i++)
 	{
-		cout << " ";
+		temp += " ";
 	}
+	return temp;
 }
 
-void print_number_by_line(int number, int line)
+string get_number_by_line(int number, int line)
 {
-	if (number == 1)
+	if (number == 1 && line >= 0 && line < TIMER_DIGIT_HEIGHT)
 	{
-		cout << 1;
-		return;
+		return to_string(1);
 	}
 
 	switch (line)
@@ -85,14 +87,11 @@ void print_number_by_line(int number, int line)
 		switch (number)
 		{
 		case 4:
-			print_number_box(number);
-			break;
+			return get_number_box(number);
 
 		default:
-			print_number_line(number);
-			break;
+			return get_number_line(number);
 		}
-		break;
 	case 1:
 	case 2:
 	case 3:
@@ -103,33 +102,25 @@ void print_number_by_line(int number, int line)
 		case 4:
 		case 8:
 		case 9:
-			print_number_box(number);
-			break;
+			return get_number_box(number);
 
 		case 6:
 		case 5:
-			print_number_left(number);
-			break;
+			return get_number_left(number);
 
 		default:
-			print_number_right(number);
-			break;
+			return get_number_right(number);
 		}
-		break;
 	case 5:
 		switch (number)
 		{
 		case 0:
-			print_number_box(number);
-			break;
+			return get_number_box(number);
 		case 7:
-			print_number_right(number);
-			break;
+			return get_number_right(number);
 		default:
-			print_number_line(number);
-			break;
+			return get_number_line(number);
 		}
-		break;
 	case 6:
 	case 7:
 	case 8:
@@ -139,36 +130,28 @@ void print_number_by_line(int number, int line)
 		case 6:
 		case 8:
 		case 0:
-			print_number_box(number);
-			break;
+			return get_number_box(number);
 		case 2:
-			print_number_left(number);
-			break;
+			return get_number_left(number);
 
 		default:
-			print_number_right(number);
-			break;
+			return get_number_right(number);
 		}
-		break;
 	case 10:
 		switch (number)
 		{
 		case 4:
 		case 7:
-			print_number_right(number);
-			break;
+			return get_number_right(number);
 
 		default:
-			print_number_line(number);
-			break;
+			return get_number_line(number);
 		}
-		break;
-
 	default:
-		break;
+		return "";
 	}
 
-	cout << " ";
+	return "";
 }
 
 void beep_sound()
@@ -188,19 +171,23 @@ int count_digits(int n)
 	return count;
 }
 
-void seed_digits(int* time, int* digits, int count){
+void seed_digits(int *time, int *digits, int count)
+{
 	int minutes = time[0];
 	int seconds = time[1];
 
-	if(minutes < 10){
+	if (minutes < 10)
+	{
 		digits[0] = 0;
 		digits[1] = minutes;
-	} else{
-		int* temp = new int[count-2];
-		for (int i = 0; i < count-2; i++)
+	}
+	else
+	{
+		int *temp = new int[count - 2];
+		for (int i = 0; i < count - 2; i++)
 		{
 			int digit = minutes % 10;
-			minutes/=10;
+			minutes /= 10;
 			temp[i] = digit;
 		}
 
@@ -209,49 +196,61 @@ void seed_digits(int* time, int* digits, int count){
 		{
 			digits[j] = temp[i];
 		}
+
+		delete [](temp);
 	}
 
-	int tens = seconds%10;
-	seconds/=10;
+	int tens = seconds % 10;
+	seconds /= 10;
 	int hundreds = seconds;
 
-	digits[count-2] = hundreds;
-	digits[count-1] = tens;	
+	digits[count - 2] = hundreds;
+	digits[count - 1] = tens;
+}
+
+void print_centered_line(string line, int length)
+{
+	int padding = (WINDOW_WIDTH - length) / 2;
+	cout << GRN << string(padding, ' ') << line << endl;
 }
 
 void print_digit_by_digit(int *time)
 {
 	int count = 4;
-	if(time[0] > 100){
+	if (time[0] > 100)
+	{
 		count = count_digits(time[0]) + 2;
 	}
 
 	int *digits = new int[count];
 
 	seed_digits(time, digits, count);
+	int line_length = 0;
 
-	// for (int i = 0; i < count; i++)
-	// {
-	// 	cout << *(digits+i) << " ";
-	// }
-	// cout << endl;
+	cout << time[1] << endl;
 
-	for (int line = 0; line <= TIMER_DIGIT_HEIGHT; line++)
+	for (int line_index = 0; line_index <= TIMER_DIGIT_HEIGHT; line_index++)
 	{
+		string line = "";
 		for (int i = 0; i < count; i++)
 		{
-			print_number_by_line(*(digits + i), line);
+			line.append(get_number_by_line(*(digits + i), line_index));
+			line += " ";
 		}
-		cout << endl;
+		if (line_length < line.length())
+		{
+			line_length = line.length();
+		}
+		print_centered_line(line, line_length);
 	}
-	
+
 	delete[](digits);
 }
 
 void start_timer(int *time)
 {
-	int minutes = time[0];
-	int seconds = time[1];
+	int *minutes = &time[0];
+	int *seconds = &time[1];
 
 	while (true)
 	{
@@ -261,17 +260,17 @@ void start_timer(int *time)
 
 		sleep(1);
 
-		if (minutes == MIN_SECONDS && seconds == MIN_SECONDS)
+		if (*minutes == MIN_SECONDS && *seconds == MIN_SECONDS)
 		{
 			break;
 		}
 
-		seconds--;
+		(*seconds)--;
 
-		if (seconds < MIN_SECONDS)
+		if (*seconds < MIN_SECONDS)
 		{
-			minutes--;
-			seconds = SECONDS_IN_MINUTE - 1;
+			(*minutes)--;
+			(*seconds) = SECONDS_IN_MINUTE - 1;
 		}
 	}
 
@@ -296,9 +295,7 @@ int main(int argc, char const *argv[])
 
 	int *time = convertToMinutes(seconds);
 
-	cout << setfill(' ') << setw(WINDOW_WIDTH) << std::center;
-	cout << endl;
-	print_digit_by_digit(time);
+	start_timer(time);
 
 	delete[](time);
 	return 0;
