@@ -79,12 +79,12 @@ int main(int argc, char const *argv[])
 			continue;
         }
 
-		if (seconds < 0 || seconds > 9999)
+		if (seconds < MIN_SECONDS || seconds > MAX_SECONDS)
 		{
 			cout << RED << "Invalid seconds format!" << endl
 				 << endl;
 		}
-	} while (seconds < 0 || seconds > 9999);
+	} while (seconds < MIN_SECONDS || seconds > MAX_SECONDS);
 
 	cout << seconds << endl;
 
