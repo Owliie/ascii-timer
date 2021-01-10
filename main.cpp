@@ -19,6 +19,7 @@ const int TIMER_DIGIT_WIDTH = 10;
 const int WINDOW_WIDTH = 80;
 const int WINDOW_HEIGHT = 25;
 const string BLACK_BLOCK_ASCII_CODE = "\u2593";
+const char BEEP_CHAR = '\7';
 
 int *convertToMinutes(int seconds)
 {
@@ -157,7 +158,7 @@ string get_number_by_line(int number, int line)
 
 void beep_sound()
 {
-	cout << '\7';
+	cout << BEEP_CHAR;
 }
 
 int count_digits(int n)
