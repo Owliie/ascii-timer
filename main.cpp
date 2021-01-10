@@ -18,6 +18,7 @@ const int TIMER_DIGIT_HEIGHT = 11;
 const int TIMER_DIGIT_WIDTH = 10;
 const int WINDOW_WIDTH = 80;
 const int WINDOW_HEIGHT = 25;
+const string BLACK_BLOCK_ASCII_CODE = "\u2593";
 
 int *convertToMinutes(int seconds)
 {
@@ -197,7 +198,7 @@ void seed_digits(int *time, int *digits, int count)
 			digits[j] = temp[i];
 		}
 
-		delete [](temp);
+		delete[](temp);
 	}
 
 	int tens = seconds % 10;
@@ -225,9 +226,6 @@ void print_digit_by_digit(int *time)
 	int *digits = new int[count];
 
 	seed_digits(time, digits, count);
-	int line_length = 0;
-
-	cout << time[1] << endl;
 
 	for (int line_index = 0; line_index <= TIMER_DIGIT_HEIGHT; line_index++)
 	{
@@ -236,10 +234,30 @@ void print_digit_by_digit(int *time)
 		{
 			line.append(get_number_by_line(*(digits + i), line_index));
 			line += " ";
+
+			if (i == count - 3)
+			{
+				if (line_index == 4 || line_index == 7)
+				{
+					line += BLACK_BLOCK_ASCII_CODE;
+				}
+				else
+				{
+					line += " ";
+				}
+
+				line += " ";
+			}
+			else
+			{
+				line += " ";
+			}
 		}
-		if (line_length < line.length())
+
+		int line_length = line.length();
+		if (line_index == 4 || line_index == 7)
 		{
-			line_length = line.length();
+			line_length -= 2;
 		}
 		print_centered_line(line, line_length);
 	}
